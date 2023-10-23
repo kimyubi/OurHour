@@ -55,8 +55,7 @@ dependencies {
     // SwaggerUI + Spring Rest Docs
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.0'
-    swaggerUI 'org.webjars:swagger-ui:4.18.1'
-
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4'
 }
 
 openapi3 {
@@ -73,16 +72,21 @@ openapi3 {
 
 swaggerSources {
     sample {
-        setInputFile(layout.buildDirectory.dir("/api-spec/openapi3.yaml").get().asFile)
+        setInputFile(layout.buildDirectory.file("/api-spec/openapi3.yaml").get().asFile)
     }
 }
 
-tasks.named('test') {
+test{
     useJUnitPlatform()
 }
 
 generateSwaggerUI {
     dependsOn 'openapi3'
+    delete file('src/main/resources/static/docs/')
+    copy {
+        from "build/resources/main/static/docs"
+        into "src/main/resources/static/docs/"
+    }
 }
 
 tasks.register('copySwaggerUI', Copy) {
@@ -90,7 +94,7 @@ tasks.register('copySwaggerUI', Copy) {
     def generateSwaggerUISampleTask = tasks.named('generateSwaggerUISample', GenerateSwaggerUI).get()
 
     from("${generateSwaggerUISampleTask.outputDir}")
-    into("static/docs")
+    into("../build/resources/main/static/docs")
 }
 
 bootJar {
