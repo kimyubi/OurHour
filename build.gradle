@@ -2,6 +2,8 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.1.4'
     id 'io.spring.dependency-management' version '1.1.3'
+    id "com.epages.restdocs-api-spec" version '0.19.0'
+    id 'org.hidetake.swagger.generator' version '2.19.2'
 }
 
 group = 'com.ourhours'
@@ -22,20 +24,70 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
-    runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.projectlombok:lombok'
+
+    // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // docker compose
+    developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+
+    // JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // Testcontainers
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:mysql'
+
+    // mysql
+    // TODO: mariadb로 마이그레이션
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // SwaggerUI + Spring Rest Docs
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.0'
+    swaggerUI 'org.webjars:swagger-ui:4.18.1'
+
+}
+
+openapi3 {
+    title = 'OurHour REST API'
+    description = 'OurHour 서비스의 API 문서입니다.'
+    version = '0.1.0'
+    servers = [ { url = 'http://localhost:8080' } ]
+    format = 'yaml'
+    contact = {
+        name = 'Kimyubi'
+        email = 'ieieie0419@gmail.com'
+    }
+}
+
+swaggerSources {
+    sample {
+        setInputFile(layout.buildDirectory.dir("/api-spec/openapi3.yaml").get().asFile)
+    }
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+generateSwaggerUI {
+    dependsOn 'openapi3'
+}
+
+bootJar {
+    dependsOn generateSwaggerUISample
+    from("${generateSwaggerUISample.outputDir}") {
+        into 'static/docs'
+    }
 }

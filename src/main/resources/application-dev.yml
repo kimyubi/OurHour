@@ -1,0 +1,7 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  docker:
+    compose:
+      file: docker-compose.yml

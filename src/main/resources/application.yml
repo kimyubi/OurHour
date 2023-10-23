@@ -1,0 +1,14 @@
+spring:
+  profiles:
+    default: ${SPRING_ACTIVE_PROFILE}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+server:
+  port: 9000
