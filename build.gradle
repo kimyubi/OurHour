@@ -63,7 +63,7 @@ openapi3 {
     title = 'OurHour REST API'
     description = 'OurHour 서비스의 API 문서입니다.'
     version = '0.1.0'
-    servers = [ { url = 'http://localhost:8080' } ]
+    servers = [{ url = 'http://localhost:8080' }]
     format = 'yaml'
     contact = {
         name = 'Kimyubi'
@@ -85,9 +85,14 @@ generateSwaggerUI {
     dependsOn 'openapi3'
 }
 
+tasks.register('copySwaggerUI', Copy) {
+    dependsOn 'generateSwaggerUISample'
+    def generateSwaggerUISampleTask = tasks.named('generateSwaggerUISample', GenerateSwaggerUI).get()
+
+    from("${generateSwaggerUISampleTask.outputDir}")
+    into("static/docs")
+}
+
 bootJar {
-    dependsOn generateSwaggerUISample
-    from("${generateSwaggerUISample.outputDir}") {
-        into 'static/docs'
-    }
+    dependsOn 'copySwaggerUI'
 }
