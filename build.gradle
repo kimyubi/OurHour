@@ -46,6 +46,7 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
     // test
@@ -64,14 +65,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    // Testcontainers
-    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
-    testImplementation 'org.testcontainers:junit-jupiter'
-    testImplementation 'org.testcontainers:mysql'
-
-    // mysql
-    // TODO: mariadb로 마이그레이션
-    runtimeOnly 'com.mysql:mysql-connector-j'
+    // postgresql
+    runtimeOnly 'org.postgresql:postgresql'
 
     // SwaggerUI + Spring Rest Docs
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'

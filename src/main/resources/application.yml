@@ -9,6 +9,7 @@ spring:
       hibernate:
         format_sql: true
     show-sql: true
+    database: postgresql
 
 springdoc:
   swagger-ui:
