@@ -11,7 +11,7 @@ spring:
     main:
       hikari:
         driver-class-name: org.postgresql.Driver
-        jdbc-url: jdbc:postgresql://localhost:5433/ourhour
+        jdbc-url: jdbc:postgresql://localhost:5432/ourhour
         username: my_user
         password: my_password
     standby:

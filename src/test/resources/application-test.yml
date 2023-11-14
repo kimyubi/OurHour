@@ -1,0 +1,18 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    main:
+      hikari:
+        driver-class-name: org.postgresql.Driver
+        username: test
+        password: test
+    standby:
+      hikari:
+        driver-class-name: org.postgresql.Driver
+        username: test
+        password: test
+
+
