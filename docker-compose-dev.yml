@@ -18,7 +18,7 @@ services:
       - POSTGRESQL_DATABASE=ourhour
 
   # 읽기 전용 데이터베이스
-  postgesql-standby:
+  postgresql-standby:
     image: 'bitnami/postgresql:latest'
     ports:
       - '5433:5432'
