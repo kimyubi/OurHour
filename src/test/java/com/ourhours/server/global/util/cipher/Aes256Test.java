@@ -14,7 +14,7 @@ class Aes256Test {
 
 	@DisplayName("AES-256알고리즘 암호화 테스트")
 	@Test
-	void aes256EncryptionTest() throws Exception {
+	void aes256EncryptionTest() {
 		//given
 		String originText = "test";
 		String cipherText = "N1Ak85yePvFevd6s7qTgeg==";
@@ -30,7 +30,6 @@ class Aes256Test {
 	@Test
 	void aes256DecryptionTest() throws Exception {
 		//given
-		Aes256 aes256 = new Aes256();
 		String originText = "test";
 		String cipherText = "N1Ak85yePvFevd6s7qTgeg==";
 
