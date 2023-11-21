@@ -2,14 +2,14 @@ package com.ourhours.server.global.util.cipher;
 
 import static org.junit.Assert.*;
 
+import java.io.UnsupportedEncodingException;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.context.ActiveProfiles;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@ActiveProfiles("cipher")
 class Aes256Test {
 
 	@DisplayName("AES-256알고리즘 암호화 테스트")
@@ -28,7 +28,7 @@ class Aes256Test {
 
 	@DisplayName("AES-256알고리즘 복호화 테스트")
 	@Test
-	void aes256DecryptionTest() throws Exception {
+	void aes256DecryptionTest() throws UnsupportedEncodingException {
 		//given
 		String originText = "test";
 		String cipherText = "N1Ak85yePvFevd6s7qTgeg==";
