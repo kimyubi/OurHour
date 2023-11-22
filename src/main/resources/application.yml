@@ -15,3 +15,9 @@ springdoc:
   swagger-ui:
     url: /docs/openapi3.yaml
     path: /swagger
+    csrf:
+      enabled: true
+
+jwt:
+  secret: ${SECRET}
+  token-validity-time: ${TOKEN_VALIDITY_TIME}

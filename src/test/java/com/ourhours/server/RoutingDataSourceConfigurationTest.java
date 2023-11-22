@@ -1,6 +1,6 @@
 package com.ourhours.server;
 
-import static com.ourhours.server.domain.ModuleInformation.*;
+import static com.ourhours.server.domain.ModuleConstant.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.lang.reflect.Method;

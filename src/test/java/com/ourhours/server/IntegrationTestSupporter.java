@@ -1,6 +1,6 @@
 package com.ourhours.server;
 
-import static com.ourhours.server.domain.ModuleInformation.*;
+import static com.ourhours.server.domain.ModuleConstant.*;
 import static org.testcontainers.containers.PostgreSQLContainer.*;
 
 import java.io.File;
@@ -19,13 +19,18 @@ import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 
+import com.ourhours.server.global.util.jwt.JwtProvider;
+
 @SpringBootTest
 @ActiveProfiles("test")
 @ContextConfiguration(initializers = IntegrationTestSupporter.ContainerPropertyInitializer.class)
-abstract class IntegrationTestSupporter {
+public abstract class IntegrationTestSupporter {
 
 	@Autowired
 	protected Environment environment;
+
+	@Autowired
+	protected JwtProvider jwtProvider;
 
 	@Container
 	static final DockerComposeContainer<?> postgresContainer;

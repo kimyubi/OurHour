@@ -20,10 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Aes256 {
-	private static final String TRANSFORMATION = CipherConstants.TRANSFORMATION.getValue();
-	private static final String PRIVATE_KEY_AES256 = CipherConstants.PRIVATE_KEY_AES256.getValue();
-	private static final String AES = CipherConstants.AES.getValue();
-	private static final String CHARSET_NAME = CipherConstants.CHARSET_NAME.getValue();
+	private static final String TRANSFORMATION = CipherConstant.TRANSFORMATION.getValue();
+	private static final String PRIVATE_KEY_AES256 = CipherConstant.PRIVATE_KEY_AES256.getValue();
+	private static final String AES = CipherConstant.AES.getValue();
+	private static final String CHARSET_NAME = CipherConstant.CHARSET_NAME.getValue();
 
 	public static String encrypt(String text) {
 		SecretKeySpec secretKey = new SecretKeySpec(PRIVATE_KEY_AES256.getBytes(), AES);
