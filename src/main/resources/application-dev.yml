@@ -20,3 +20,5 @@ spring:
         jdbc-url: jdbc:postgresql://localhost:5433/ourhour
         username: my_user
         password: my_password
+
+

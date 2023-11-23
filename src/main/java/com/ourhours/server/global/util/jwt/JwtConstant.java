@@ -9,7 +9,8 @@ public enum JwtConstant {
 
 	USER_ID("user_id"),
 	UUID("uuid"),
-	ALG("alg");
+	ALG("alg"),
+	JWT_COOKIE_NAME("Authorization");
 
 	private final String value;
 

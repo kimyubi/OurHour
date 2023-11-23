@@ -1,4 +1,4 @@
-package com.ourhours.server.global.util.jwt;
+package com.ourhours.server.global.model.jwt.dto.response;
 
 import java.util.Date;
 

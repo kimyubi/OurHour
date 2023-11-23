@@ -12,6 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import com.ourhours.server.global.model.exception.JwtException;
+import com.ourhours.server.global.model.jwt.dto.response.JwtResponseDto;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -48,7 +49,7 @@ public class JwtProvider {
 		this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 	}
 
-	public JwtResponseDto generateToken(String email, Long userId, String plainUUID, String encryptedUUID) {
+	public JwtResponseDto generateToken(Long userId, String plainUUID, String encryptedUUID) {
 		Map<String, Object> headers = new HashMap<>();
 		headers.put(Header.TYPE, Header.JWT_TYPE);
 		headers.put(ALG, SignatureAlgorithm.HS256.getValue());
@@ -62,7 +63,6 @@ public class JwtProvider {
 
 		String token = Jwts.builder()
 			.setHeader(headers)
-			.setSubject(email)
 			.setClaims(claims)
 			.setExpiration(tokenExpireDate)
 			.signWith(key, SignatureAlgorithm.HS256)
@@ -71,7 +71,7 @@ public class JwtProvider {
 		return JwtResponseDto.builder().token(token).uuid(plainUUID).tokenExpiredDate(tokenExpireDate).build();
 	}
 
-	public Long getUserId(String token) {
+	public Long getUserId(String token) throws JwtException {
 		Claims claims = parseClaims(token);
 		return claims.get(USER_ID, Long.class);
 	}
@@ -84,7 +84,7 @@ public class JwtProvider {
 	// TODO : getClaims 테스트 코드 작성
 	// UUID 검증 ->. required(UUID, 매개변수로 받은 UUID(FROM 쿠키), InvalidClaimException)
 	public Claims parseClaims(String token) throws JwtException {
-		long clockSkewSeconds = 3 * 60l;
+		long clockSkewSeconds = 3 * 60L;
 
 		try {
 			return Jwts.parserBuilder()

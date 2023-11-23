@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.ourhours.server.IntegrationTestSupporter;
+import com.ourhours.server.global.model.jwt.dto.response.JwtResponseDto;
 import com.ourhours.server.global.util.cipher.Aes256;
 
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,7 @@ class JwtProviderTest extends IntegrationTestSupporter {
 		String encryptedUUID = Aes256.encrypt(plainUUID);
 
 		Long givenUserId = 1L;
-		JwtResponseDto jwtResponseDto = jwtProvider.generateToken("kimyubi1234@gmail.com", givenUserId, plainUUID,
+		JwtResponseDto jwtResponseDto = jwtProvider.generateToken(givenUserId, plainUUID,
 			encryptedUUID);
 
 		// when
@@ -54,7 +55,7 @@ class JwtProviderTest extends IntegrationTestSupporter {
 		String encryptedUUID = Aes256.encrypt(plainUUID);
 
 		Long givenUserId = 1L;
-		JwtResponseDto jwtResponseDto = jwtProvider.generateToken("kimyubi1234@gmail.com", givenUserId, plainUUID,
+		JwtResponseDto jwtResponseDto = jwtProvider.generateToken(givenUserId, plainUUID,
 			encryptedUUID);
 
 		// when
