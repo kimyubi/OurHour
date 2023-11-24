@@ -1,5 +1,6 @@
 package com.ourhours.server.global.util.jwt;
 
+import static com.ourhours.server.global.model.exception.ExceptionConstant.*;
 import static org.junit.Assert.*;
 
 import java.util.UUID;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.ourhours.server.IntegrationTestSupporter;
+import com.ourhours.server.global.model.exception.InvalidUUIDException;
 import com.ourhours.server.global.model.jwt.dto.response.JwtResponseDto;
 import com.ourhours.server.global.util.cipher.Aes256;
 
@@ -27,7 +29,7 @@ class JwtProviderTest extends IntegrationTestSupporter {
 		assertEquals(jwtProvider.getTokenValidityTime(), tokenValidityTime);
 	}
 
-	@DisplayName("")
+	@DisplayName("토큰과 토큰에 포함된 UUID가 모두 유효하면 토큰을 파싱하여 UserId를 꺼낸다.")
 	@Test
 	void getUserIdTest() {
 		//given
@@ -40,33 +42,30 @@ class JwtProviderTest extends IntegrationTestSupporter {
 
 		// when
 		String token = jwtResponseDto.token();
-		Long userIdInToken = jwtProvider.getUserId(token);
+		Long userIdInToken = jwtProvider.getUserId(token, plainUUID);
 
 		// then
 		log.info("Token, userIdInToken : [{}], [{}]", token, userIdInToken);
 		assertEquals(givenUserId, userIdInToken);
 	}
 
-	@DisplayName("")
+	@DisplayName("토큰에 포함된 UUID가 유효하지 않으면, InvalidUUIDException을 던진다.")
 	@Test
-	void getUUIDTest() {
+	void getUserIdTesWithWrongUUID() {
 		//given
 		String plainUUID = UUID.randomUUID().toString();
 		String encryptedUUID = Aes256.encrypt(plainUUID);
+		String wrongUUID = UUID.randomUUID().toString();
 
 		Long givenUserId = 1L;
 		JwtResponseDto jwtResponseDto = jwtProvider.generateToken(givenUserId, plainUUID,
 			encryptedUUID);
 
-		// when
+		// when // then
 		String token = jwtResponseDto.token();
-		String UUIDInJwtResponseDto = jwtResponseDto.uuid();
-		String UUIDInToken = jwtProvider.getUUID(token);
+		assertThrows(INVALID_UUID.getMessage(), InvalidUUIDException.class,
+			() -> jwtProvider.getUserId(token, wrongUUID));
 
-		// then
-		log.info("UUIDInToken, UUIDInJwtResponseDto : [{}], [{}]", UUIDInToken, UUIDInJwtResponseDto);
-		assertNotEquals(UUIDInToken, UUIDInJwtResponseDto);
-		assertEquals(UUIDInToken, encryptedUUID);
-		assertEquals(UUIDInJwtResponseDto, plainUUID);
 	}
+
 }

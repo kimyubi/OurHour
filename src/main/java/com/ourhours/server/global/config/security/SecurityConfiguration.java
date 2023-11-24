@@ -17,7 +17,7 @@ import com.ourhours.server.global.util.jwt.filter.JwtExceptionFilter;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 

@@ -11,12 +11,14 @@ import java.util.Map;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import com.ourhours.server.global.model.exception.InvalidUUIDException;
 import com.ourhours.server.global.model.exception.JwtException;
 import com.ourhours.server.global.model.jwt.dto.response.JwtResponseDto;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;
+import io.jsonwebtoken.InvalidClaimException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -36,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtProvider {
 
 	private static final String USER_ID = JwtConstant.USER_ID.getValue();
-	private static final String UUID = JwtConstant.UUID.getValue();
+	private static final String UUID = JwtConstant.UUID_COOKIE_NAME.getValue();
 
 	private static final String ALG = JwtConstant.ALG.getValue();
 
@@ -71,23 +73,17 @@ public class JwtProvider {
 		return JwtResponseDto.builder().token(token).uuid(plainUUID).tokenExpiredDate(tokenExpireDate).build();
 	}
 
-	public Long getUserId(String token) throws JwtException {
-		Claims claims = parseClaims(token);
+	public Long getUserId(String token, String uuid) throws JwtException, InvalidUUIDException {
+		Claims claims = parseClaims(token, uuid);
 		return claims.get(USER_ID, Long.class);
 	}
 
-	public String getUUID(String token) {
-		Claims claims = parseClaims(token);
-		return claims.get(UUID, String.class);
-	}
-
-	// TODO : getClaims 테스트 코드 작성
-	// UUID 검증 ->. required(UUID, 매개변수로 받은 UUID(FROM 쿠키), InvalidClaimException)
-	public Claims parseClaims(String token) throws JwtException {
+	public Claims parseClaims(String token, String uuid) throws JwtException, InvalidUUIDException {
 		long clockSkewSeconds = 3 * 60L;
 
 		try {
 			return Jwts.parserBuilder()
+				.require(UUID, uuid)
 				.setAllowedClockSkewSeconds(clockSkewSeconds)
 				.setSigningKey(key)
 				.build()
@@ -101,6 +97,8 @@ public class JwtProvider {
 			throw new JwtException(EXPIRED_TOKEN);
 		} catch (UnsupportedJwtException e) {
 			throw new JwtException(UNSUPPORTED_TOKEN);
+		} catch (InvalidClaimException e) {
+			throw new InvalidUUIDException(INVALID_UUID);
 		}
 	}
 }

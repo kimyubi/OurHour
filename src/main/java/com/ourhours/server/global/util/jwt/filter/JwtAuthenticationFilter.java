@@ -1,5 +1,6 @@
 package com.ourhours.server.global.util.jwt.filter;
 
+import static com.ourhours.server.global.model.exception.ExceptionConstant.*;
 import static com.ourhours.server.global.util.jwt.JwtConstant.*;
 
 import java.io.IOException;
@@ -10,10 +11,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.ourhours.server.global.model.exception.InvalidUUIDException;
 import com.ourhours.server.global.model.exception.JwtException;
 import com.ourhours.server.global.model.security.AnonymousAuthentication;
 import com.ourhours.server.global.model.security.JwtAuthentication;
 import com.ourhours.server.global.model.security.dto.request.JwtAuthenticationRequestDto;
+import com.ourhours.server.global.util.cipher.Aes256;
 import com.ourhours.server.global.util.jwt.JwtProvider;
 
 import jakarta.servlet.FilterChain;
@@ -29,36 +32,45 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private static final AnonymousAuthentication ANONYMOUS_AUTHENTICATION = new AnonymousAuthentication();
 	private final JwtProvider jwtProvider;
 
-	// TODO: UUID 검증하여 유효하지 않은 경우 Exception 던지기
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-		FilterChain filterChain) throws ServletException, IOException, JwtException {
+		FilterChain filterChain) throws ServletException, IOException, JwtException, InvalidUUIDException {
+		Optional<Cookie[]> optionalCookies = Optional.ofNullable(request.getCookies());
 
-		Cookie[] cookies = request.getCookies();
-		if (cookies == null) {
+		if (optionalCookies.isEmpty() || isJwtCookieMissing(optionalCookies.get())) {
 			setAnonymousAuthentication();
 			filterChain.doFilter(request, response);
-		} else {
-
-			Optional<Cookie> optionalCookie = Arrays.stream(cookies)
-				.filter(cookie -> cookie.getName().equals(JWT_COOKIE_NAME.getValue()))
-				.findFirst();
-
-			if (optionalCookie.isEmpty()) {
-				setAnonymousAuthentication();
-				filterChain.doFilter(request, response);
-			}
-
-			String token = optionalCookie.get().getValue();
-
-			try {
-				Long userId = jwtProvider.getUserId(token);
-				setJwtAuthentication(new JwtAuthenticationRequestDto(token, userId));
-				filterChain.doFilter(request, response);
-			} catch (JwtException jwtException) {
-				throw jwtException;
-			}
+			return;
 		}
+
+		Cookie[] cookies = optionalCookies.get();
+		String token = getToken(cookies);
+		String uuid = getUuid(cookies);
+
+		Long userId = jwtProvider.getUserId(token, Aes256.encrypt(uuid));
+		setJwtAuthentication(new JwtAuthenticationRequestDto(token, userId));
+		filterChain.doFilter(request, response);
+	}
+
+	private boolean isJwtCookieMissing(Cookie[] cookies) {
+		return Arrays.stream(cookies)
+			.noneMatch(cookie -> cookie.getName().equals(JWT_COOKIE_NAME.getValue()));
+	}
+
+	private String getToken(Cookie[] cookies) {
+		return Arrays.stream(cookies)
+			.filter(cookie -> cookie.getName().equals(JWT_COOKIE_NAME.getValue()))
+			.findFirst()
+			.map(Cookie::getValue)
+			.orElseThrow(() -> new JwtException(FAILED_TO_GET_TOKEN));
+	}
+
+	private String getUuid(Cookie[] cookies) {
+		return Arrays.stream(cookies)
+			.filter(cookie -> cookie.getName().equals(UUID_COOKIE_NAME.getValue()))
+			.findFirst()
+			.map(Cookie::getValue)
+			.orElseThrow(() -> new InvalidUUIDException(INVALID_UUID));
 	}
 
 	private void setJwtAuthentication(JwtAuthenticationRequestDto dto) {
