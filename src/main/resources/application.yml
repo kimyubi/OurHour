@@ -21,3 +21,7 @@ springdoc:
 jwt:
   secret: ${SECRET}
   token-validity-time: ${TOKEN_VALIDITY_TIME}
+
+
+
+

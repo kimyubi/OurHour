@@ -21,4 +21,11 @@ spring:
         username: my_user
         password: my_password
 
+server:
+  ssl:
+    key-store: classpath:localhost.p12
+    key-store-type: PKCS12
+    key-store-password: changeit
+  port: 8000
+
 
