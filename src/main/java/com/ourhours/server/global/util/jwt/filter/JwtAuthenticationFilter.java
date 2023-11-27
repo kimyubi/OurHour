@@ -13,9 +13,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.ourhours.server.global.model.exception.InvalidUUIDException;
 import com.ourhours.server.global.model.exception.JwtException;
+import com.ourhours.server.global.model.jwt.dto.request.JwtAuthenticationRequestDto;
 import com.ourhours.server.global.model.security.AnonymousAuthentication;
 import com.ourhours.server.global.model.security.JwtAuthentication;
-import com.ourhours.server.global.model.security.dto.request.JwtAuthenticationRequestDto;
 import com.ourhours.server.global.util.cipher.Aes256;
 import com.ourhours.server.global.util.jwt.JwtProvider;
 

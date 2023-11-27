@@ -39,7 +39,6 @@ public class JwtProvider {
 
 	private static final String USER_ID = JwtConstant.USER_ID.getValue();
 	private static final String UUID = JwtConstant.UUID_COOKIE_NAME.getValue();
-
 	private static final String ALG = JwtConstant.ALG.getValue();
 
 	private String secret;

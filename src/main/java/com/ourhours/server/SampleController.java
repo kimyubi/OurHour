@@ -37,10 +37,12 @@ public class SampleController {
 		Cookie jwtCookie = new Cookie(JWT_COOKIE_NAME.getValue(), jwtResponseDto.token());
 		jwtCookie.setPath("/");
 		jwtCookie.setMaxAge(14 * 24 * 60 * 60);
+		jwtCookie.isHttpOnly();
 
 		Cookie uuidCookie = new Cookie(UUID_COOKIE_NAME.getValue(), jwtResponseDto.uuid());
 		uuidCookie.setPath("/");
 		uuidCookie.setMaxAge(14 * 24 * 60 * 60);
+		uuidCookie.isHttpOnly();
 
 		response.addCookie(jwtCookie);
 		response.addCookie(uuidCookie);

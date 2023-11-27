@@ -12,7 +12,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import com.ourhours.server.global.util.jwt.filter.JwtAuthenticationFilter;
-import com.ourhours.server.global.util.jwt.filter.JwtExceptionFilter;
+import com.ourhours.server.global.util.jwt.filter.JwtExceptionHandlerFilter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfiguration {
 
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
-	private final JwtExceptionFilter jwtExceptionFilter;
+	private final JwtExceptionHandlerFilter jwtExceptionHandlerFilter;
 
 	private static final String[] WHITE_LIST = {
 		"/",
@@ -43,7 +43,7 @@ public class SecurityConfiguration {
 				.anyRequest().authenticated()
 			)
 			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-			.addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class)
+			.addFilterBefore(jwtExceptionHandlerFilter, JwtAuthenticationFilter.class)
 			.build();
 	}
 }
