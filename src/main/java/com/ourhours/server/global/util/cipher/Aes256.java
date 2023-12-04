@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Aes256 {
+public final class Aes256 {
 	private static final String TRANSFORMATION = CipherConstant.TRANSFORMATION.getValue();
 	private static final String PRIVATE_KEY_AES256 = CipherConstant.PRIVATE_KEY_AES256.getValue();
 	private static final String AES = CipherConstant.AES.getValue();
