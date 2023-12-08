@@ -1,6 +1,5 @@
 package com.ourhours.server.global.util.cipher;
 
-import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -23,9 +22,8 @@ public final class Aes256 {
 	private static final String TRANSFORMATION = CipherConstant.TRANSFORMATION.getValue();
 	private static final String PRIVATE_KEY_AES256 = CipherConstant.PRIVATE_KEY_AES256.getValue();
 	private static final String AES = CipherConstant.AES.getValue();
-	private static final String CHARSET_NAME = CipherConstant.CHARSET_NAME.getValue();
 
-	public static String encrypt(String text) {
+	public static String encrypt(byte[] bytes) {
 		SecretKeySpec secretKey = new SecretKeySpec(PRIVATE_KEY_AES256.getBytes(), AES);
 		IvParameterSpec iv = new IvParameterSpec(PRIVATE_KEY_AES256.substring(0, 16).getBytes());
 		byte[] encrypted = null;
@@ -33,14 +31,13 @@ public final class Aes256 {
 		try {
 			Cipher cipher = Cipher.getInstance(TRANSFORMATION);
 			cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
-			encrypted = cipher.doFinal(text.getBytes(CHARSET_NAME));
+			encrypted = cipher.doFinal(bytes);
 
 		} catch (NoSuchAlgorithmException
 		         | NoSuchPaddingException
 		         | InvalidKeyException
 		         | InvalidAlgorithmParameterException
 		         | IllegalBlockSizeException
-		         | UnsupportedEncodingException
 		         | BadPaddingException e) {
 			log.error("Exception [Message] : {}", e.getMessage());
 			log.error("Exception [Location] : {}", e.getStackTrace()[0]);
@@ -49,7 +46,7 @@ public final class Aes256 {
 
 	}
 
-	public static String decrypt(String cipherText) throws UnsupportedEncodingException {
+	public static byte[] decrypt(byte[] cipherText) {
 		SecretKeySpec secretKey = new SecretKeySpec(PRIVATE_KEY_AES256.getBytes(), AES);
 		IvParameterSpec iv = new IvParameterSpec(PRIVATE_KEY_AES256.substring(0, 16).getBytes());
 		byte[] decrypted = null;
@@ -69,7 +66,7 @@ public final class Aes256 {
 			log.error("Exception [Location] : {}", e.getStackTrace()[0]);
 		}
 
-		return new String(decrypted, CHARSET_NAME);
+		return decrypted;
 	}
 
 }

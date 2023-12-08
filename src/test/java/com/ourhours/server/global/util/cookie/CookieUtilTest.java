@@ -3,6 +3,7 @@ package com.ourhours.server.global.util.cookie;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.time.Duration;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -91,7 +92,7 @@ class CookieUtilTest {
 		// given
 		String cookieName = "cookie1";
 		String cookieValue = "value1";
-		int maxAge = 3600;
+		Duration maxAge = Duration.ofMinutes(1);
 
 		// when
 		CookieUtil.addCookie(response, cookieName, cookieValue, maxAge);
@@ -101,7 +102,7 @@ class CookieUtilTest {
 			cookie.getName().equals(cookieName) &&
 				cookie.getValue().equals(cookieValue) &&
 				cookie.getPath().equals("/") &&
-				cookie.getMaxAge() == maxAge &&
+				cookie.getMaxAge() == (int)maxAge.toSeconds() &&
 				cookie.isHttpOnly() &&
 				cookie.getSecure()
 		));

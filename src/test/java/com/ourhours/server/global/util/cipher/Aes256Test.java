@@ -1,8 +1,6 @@
 package com.ourhours.server.global.util.cipher;
 
-import static org.junit.Assert.*;
-
-import java.io.UnsupportedEncodingException;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +14,7 @@ class Aes256Test {
 	@Test
 	void aes256EncryptionTest() {
 		//given
-		String originText = "test";
+		byte[] originText = "test".getBytes();
 		String cipherText = "N1Ak85yePvFevd6s7qTgeg==";
 
 		// when
@@ -28,13 +26,13 @@ class Aes256Test {
 
 	@DisplayName("AES-256알고리즘 복호화 테스트")
 	@Test
-	void aes256DecryptionTest() throws UnsupportedEncodingException {
+	void aes256DecryptionTest() {
 		//given
-		String originText = "test";
-		String cipherText = "N1Ak85yePvFevd6s7qTgeg==";
+		byte[] originText = "test".getBytes();
+		byte[] cipherText = "N1Ak85yePvFevd6s7qTgeg==".getBytes();
 
 		// when
-		String aes256DecryptedText = Aes256.decrypt(cipherText);
+		byte[] aes256DecryptedText = Aes256.decrypt(cipherText);
 
 		// then
 		assertEquals(aes256DecryptedText, originText);

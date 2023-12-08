@@ -3,6 +3,7 @@ package com.ourhours.server.global.util.cookie;
 import static org.apache.commons.lang3.StringUtils.*;
 import static org.hibernate.type.descriptor.java.IntegerJavaType.*;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -22,12 +23,13 @@ public final class CookieUtil {
 				.findFirst());
 	}
 
-	public static void addCookie(HttpServletResponse response, String cookieName, String cookieValue, int maxAge) {
+	public static void addCookie(HttpServletResponse response, String cookieName, String cookieValue,
+		Duration maxAge) {
 		Cookie cookie = new Cookie(cookieName, cookieValue);
 		cookie.setPath("/");
-		cookie.setHttpOnly(true);
-		cookie.setSecure(true);
-		cookie.setMaxAge(maxAge);
+		cookie.setHttpOnly(Boolean.TRUE);
+		cookie.setSecure(Boolean.TRUE);
+		cookie.setMaxAge((int)maxAge.toSeconds());
 
 		response.addCookie(cookie);
 	}
@@ -45,5 +47,4 @@ public final class CookieUtil {
 					})
 			);
 	}
-
 }
