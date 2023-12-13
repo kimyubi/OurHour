@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum JwtConstant {
 
-	USER_ID("user_id"),
+	MEMBER_ID("member_id"),
 	UUID_COOKIE_NAME("uuid"),
 	ALG("alg"),
 	JWT_COOKIE_NAME("Authorization");

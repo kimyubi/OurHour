@@ -1,9 +1,10 @@
-package com.ourhours.server.global.util.jwt.filter;
+package com.ourhours.server.global.config.security.filter;
 
 import static com.ourhours.server.global.model.exception.ExceptionConstant.*;
 import static com.ourhours.server.global.util.jwt.JwtConstant.*;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -47,7 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String token = getToken(cookies);
 		String uuid = getUuid(cookies);
 
-		Long userId = jwtProvider.getUserId(token, Aes256.encrypt(uuid));
+		Long userId = jwtProvider.getMemberId(token, Aes256.encrypt(uuid.getBytes(StandardCharsets.UTF_8)));
 		setJwtAuthentication(new JwtAuthenticationRequestDto(token, userId));
 		filterChain.doFilter(request, response);
 	}

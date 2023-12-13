@@ -7,8 +7,6 @@ import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ourhours.server.global.config.database.postgresql.DataSourceType;
@@ -17,7 +15,6 @@ import com.ourhours.server.global.config.database.postgresql.RoutingDataSource;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Execution(ExecutionMode.CONCURRENT)
 class RoutingDataSourceConfigurationTest extends IntegrationTestSupporter {
 
 	@Transactional

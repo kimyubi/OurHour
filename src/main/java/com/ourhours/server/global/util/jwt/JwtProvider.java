@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 @ConfigurationProperties("jwt")
 public class JwtProvider {
 
-	private static final String USER_ID = JwtConstant.USER_ID.getValue();
+	private static final String MEMBER_ID = JwtConstant.MEMBER_ID.getValue();
 	private static final String UUID = JwtConstant.UUID_COOKIE_NAME.getValue();
 	private static final String ALG = JwtConstant.ALG.getValue();
 
@@ -50,13 +50,13 @@ public class JwtProvider {
 		this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 	}
 
-	public JwtResponseDto generateToken(Long userId, String plainUUID, String encryptedUUID) {
+	public JwtResponseDto generateToken(Long memberId, String plainUUID, String encryptedUUID) {
 		Map<String, Object> headers = new HashMap<>();
 		headers.put(Header.TYPE, Header.JWT_TYPE);
 		headers.put(ALG, SignatureAlgorithm.HS256.getValue());
 
 		Claims claims = Jwts.claims();
-		claims.put(USER_ID, userId);
+		claims.put(MEMBER_ID, memberId);
 		claims.put(UUID, encryptedUUID);
 
 		long now = new Date().getTime();
@@ -72,9 +72,9 @@ public class JwtProvider {
 		return JwtResponseDto.builder().token(token).uuid(plainUUID).tokenExpiredDate(tokenExpireDate).build();
 	}
 
-	public Long getUserId(String token, String uuid) throws JwtException, InvalidUUIDException {
-		Claims claims = parseClaims(token, uuid);
-		return claims.get(USER_ID, Long.class);
+	public Long getMemberId(String token, String encryptedUUID) throws JwtException, InvalidUUIDException {
+		Claims claims = parseClaims(token, encryptedUUID);
+		return claims.get(MEMBER_ID, Long.class);
 	}
 
 	public Claims parseClaims(String token, String uuid) throws JwtException, InvalidUUIDException {

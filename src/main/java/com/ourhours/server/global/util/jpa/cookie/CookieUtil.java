@@ -1,4 +1,4 @@
-package com.ourhours.server.global.util.cookie;
+package com.ourhours.server.global.util.jpa.cookie;
 
 import static org.apache.commons.lang3.StringUtils.*;
 import static org.hibernate.type.descriptor.java.IntegerJavaType.*;
@@ -34,7 +34,7 @@ public final class CookieUtil {
 		response.addCookie(cookie);
 	}
 
-	public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String cookieName) {
+	public static void removeCookie(HttpServletRequest request, HttpServletResponse response, String cookieName) {
 		Optional.of(request.getCookies())
 			.ifPresent(cookies ->
 				Arrays.stream(cookies)

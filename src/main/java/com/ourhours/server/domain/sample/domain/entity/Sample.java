@@ -1,4 +1,6 @@
-package com.ourhours.server.domain.member.domain.entity;
+package com.ourhours.server.domain.sample.domain.entity;
+
+import com.ourhours.server.global.model.BaseEntity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,22 +11,23 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Getter
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Sample extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private Long kakaoId;
-
-	private String name;
+	private String content;
 
 	@Builder
-	public Member(String name, Long kakaoId) {
-		this.name = name;
-		this.kakaoId = kakaoId;
+	public Sample(String content) {
+		this.content = content;
+	}
+
+	public void updateContent(String content) {
+		this.content = content;
 	}
 }

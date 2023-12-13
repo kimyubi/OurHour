@@ -1,8 +1,7 @@
-package com.ourhours.server.global.util.jwt.filter;
+package com.ourhours.server.global.config.security.filter;
 
 import static com.ourhours.server.global.util.jwt.JwtConstant.*;
 import static jakarta.servlet.http.HttpServletResponse.*;
-import static org.hibernate.type.descriptor.java.IntegerJavaType.*;
 import static org.springframework.http.MediaType.*;
 
 import java.io.IOException;
@@ -18,10 +17,10 @@ import com.ourhours.server.global.model.exception.ExceptionConstant;
 import com.ourhours.server.global.model.exception.ExceptionResponse;
 import com.ourhours.server.global.model.exception.InvalidUUIDException;
 import com.ourhours.server.global.model.exception.JwtException;
+import com.ourhours.server.global.util.jpa.cookie.CookieUtil;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -37,25 +36,20 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
 		} catch (JwtException | InvalidUUIDException exception) {
 			setExceptionResponse(response, exception);
 			ExceptionConstant exceptionConstant = exception.getExceptionConstant();
-			removeCookie(exceptionConstant, response);
+			removeCookie(exceptionConstant, request, response);
 			log.info("[Exception] Code: [{}], Message : [{}]", exceptionConstant.getCode(),
 				exceptionConstant.getMessage());
 		}
 	}
 
-	private void removeCookie(ExceptionConstant exceptionConstant, HttpServletResponse response) {
+	private void removeCookie(ExceptionConstant exceptionConstant, HttpServletRequest request,
+		HttpServletResponse response) {
 		if (exceptionConstant.equals(ExceptionConstant.INVALID_UUID)) {
 			log.info("Remove UUID Cookie");
-			Cookie uuidCookie = new Cookie(UUID_COOKIE_NAME.getValue(), null);
-			uuidCookie.setMaxAge(ZERO);
-			uuidCookie.setPath("/");
-			response.addCookie(uuidCookie);
+			CookieUtil.removeCookie(request, response, UUID_COOKIE_NAME.getValue());
 
 			log.info("Remove Token Cookie");
-			Cookie tokenCookie = new Cookie(JWT_COOKIE_NAME.getValue(), null);
-			tokenCookie.setMaxAge(ZERO);
-			tokenCookie.setPath("/");
-			response.addCookie(tokenCookie);
+			CookieUtil.removeCookie(request, response, JWT_COOKIE_NAME.getValue());
 		}
 	}
 

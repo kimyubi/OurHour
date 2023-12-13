@@ -15,11 +15,11 @@ import lombok.Getter;
 public class JwtAuthentication implements Authentication {
 
 	private final String token;
-	private final Long userId;
+	private final Long memberId;
 
 	public JwtAuthentication(JwtAuthenticationRequestDto dto) {
 		this.token = dto.token();
-		this.userId = dto.userId();
+		this.memberId = dto.userId();
 	}
 
 	@Override

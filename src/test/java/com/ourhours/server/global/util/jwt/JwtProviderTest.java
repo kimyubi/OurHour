@@ -3,6 +3,7 @@ package com.ourhours.server.global.util.jwt;
 import static com.ourhours.server.global.model.exception.ExceptionConstant.*;
 import static org.junit.Assert.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import org.junit.jupiter.api.DisplayName;
@@ -34,19 +35,19 @@ class JwtProviderTest extends IntegrationTestSupporter {
 	void getUserIdTest() {
 		//given
 		String plainUUID = UUID.randomUUID().toString();
-		String encryptedUUID = Aes256.encrypt(plainUUID);
+		String encryptedUUID = Aes256.encrypt(plainUUID.getBytes(StandardCharsets.UTF_8));
 
-		Long givenUserId = 1L;
-		JwtResponseDto jwtResponseDto = jwtProvider.generateToken(givenUserId, plainUUID,
+		Long givenMemberId = 1L;
+		JwtResponseDto jwtResponseDto = jwtProvider.generateToken(givenMemberId, plainUUID,
 			encryptedUUID);
 
 		// when
 		String token = jwtResponseDto.token();
-		Long userIdInToken = jwtProvider.getUserId(token, plainUUID);
+		Long userIdInToken = jwtProvider.getMemberId(token, encryptedUUID);
 
 		// then
 		log.info("Token, userIdInToken : [{}], [{}]", token, userIdInToken);
-		assertEquals(givenUserId, userIdInToken);
+		assertEquals(givenMemberId, userIdInToken);
 	}
 
 	@DisplayName("토큰에 포함된 UUID가 유효하지 않으면, InvalidUUIDException을 던진다.")
@@ -54,7 +55,7 @@ class JwtProviderTest extends IntegrationTestSupporter {
 	void getUserIdTesWithWrongUUID() {
 		//given
 		String plainUUID = UUID.randomUUID().toString();
-		String encryptedUUID = Aes256.encrypt(plainUUID);
+		String encryptedUUID = Aes256.encrypt(plainUUID.getBytes(StandardCharsets.UTF_8));
 		String wrongUUID = UUID.randomUUID().toString();
 
 		Long givenUserId = 1L;
@@ -64,7 +65,7 @@ class JwtProviderTest extends IntegrationTestSupporter {
 		// when // then
 		String token = jwtResponseDto.token();
 		assertThrows(INVALID_UUID.getMessage(), InvalidUUIDException.class,
-			() -> jwtProvider.getUserId(token, wrongUUID));
+			() -> jwtProvider.getMemberId(token, wrongUUID));
 
 	}
 

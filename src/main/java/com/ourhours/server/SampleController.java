@@ -1,18 +1,16 @@
 package com.ourhours.server;
 
-import static com.ourhours.server.global.util.jwt.JwtConstant.*;
+import java.util.Optional;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ourhours.server.global.model.jwt.dto.response.JwtResponseDto;
+import com.ourhours.server.domain.sample.domain.entity.Sample;
+import com.ourhours.server.domain.sample.repository.SampleRepository;
 import com.ourhours.server.global.model.security.JwtAuthentication;
-import com.ourhours.server.global.util.cipher.Aes256;
-import com.ourhours.server.global.util.jwt.JwtProvider;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,44 +18,35 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 public class SampleController {
-	private final JwtProvider jwtProvider;
 
-	@GetMapping("/api/token")
-	public JwtResponseDto generateToken(HttpServletResponse response) {
-		String uuid = java.util.UUID.randomUUID().toString();
-		String encryptedUuid = Aes256.encrypt(uuid);
-		JwtResponseDto jwtResponseDto = jwtProvider.generateToken(1L, uuid, encryptedUuid);
-		addCookie(response, jwtResponseDto);
-		log.info("generate Token: Token [{}], UUID [{}], UUID IN TOKEN [{}]", jwtResponseDto.token(),
-			jwtResponseDto.uuid(), encryptedUuid);
-		return jwtResponseDto;
-	}
-
-	private void addCookie(HttpServletResponse response, JwtResponseDto jwtResponseDto) {
-		Cookie jwtCookie = new Cookie(JWT_COOKIE_NAME.getValue(), jwtResponseDto.token());
-		jwtCookie.setPath("/");
-		jwtCookie.setMaxAge(14 * 24 * 60 * 60);
-		jwtCookie.setHttpOnly(true);
-		jwtCookie.setSecure(true);
-
-		Cookie uuidCookie = new Cookie(UUID_COOKIE_NAME.getValue(), jwtResponseDto.uuid());
-		uuidCookie.setPath("/");
-		uuidCookie.setMaxAge(14 * 24 * 60 * 60);
-		uuidCookie.setHttpOnly(true);
-		uuidCookie.setSecure(true);
-
-		response.addCookie(jwtCookie);
-		response.addCookie(uuidCookie);
-
-		log.info("add Cookie: Cookie Name [{}], Cookie Value [{}], ", JWT_COOKIE_NAME.getValue(),
-			jwtResponseDto.token());
-		log.info("add Cookie: Cookie Name [{}], Cookie Value [{}], ", UUID_COOKIE_NAME.getValue(),
-			jwtResponseDto.uuid());
-	}
+	private final SampleRepository sampleRepository;
 
 	@GetMapping("/api/user")
 	public Long getUserId() {
 		JwtAuthentication authentication = (JwtAuthentication)SecurityContextHolder.getContext().getAuthentication();
-		return authentication.getUserId();
+		return authentication.getMemberId();
 	}
+
+	@GetMapping("/sample")
+	public Sample saveSample() {
+		Sample sample = Sample.builder()
+			.content("sample1")
+			.build();
+
+		Sample savedSample = sampleRepository.save(sample);
+		return savedSample;
+	}
+
+	@GetMapping("/sample/update/{id}")
+	public Sample updateSample(@PathVariable Long id) {
+		Optional<Sample> sampleOptional = sampleRepository.findById(id);
+		Sample sample = sampleOptional.get();
+		sample.updateContent("new Sample");
+		sampleRepository.saveAndFlush(sample);
+
+		Optional<Sample> sampleOptional2 = sampleRepository.findById(id);
+		return sampleOptional2.get();
+
+	}
+
 }

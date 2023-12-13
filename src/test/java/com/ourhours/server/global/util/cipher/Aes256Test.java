@@ -1,6 +1,8 @@
 package com.ourhours.server.global.util.cipher;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
+
+import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,27 +16,27 @@ class Aes256Test {
 	@Test
 	void aes256EncryptionTest() {
 		//given
-		byte[] originText = "test".getBytes();
+		String originText = "test";
 		String cipherText = "N1Ak85yePvFevd6s7qTgeg==";
 
 		// when
-		String aes256EncryptedText = Aes256.encrypt(originText);
+		String aes256EncryptedText = Aes256.encrypt(originText.getBytes(StandardCharsets.UTF_8));
 
 		// then
 		assertEquals(aes256EncryptedText, cipherText);
 	}
 
-	@DisplayName("AES-256알고리즘 복호화 테스트")
 	@Test
 	void aes256DecryptionTest() {
-		//given
-		byte[] originText = "test".getBytes();
-		byte[] cipherText = "N1Ak85yePvFevd6s7qTgeg==".getBytes();
+		// given
+		String originText = "test";
+		String cipherText = "N1Ak85yePvFevd6s7qTgeg==";
 
 		// when
-		byte[] aes256DecryptedText = Aes256.decrypt(cipherText);
+		byte[] aes256DecryptedText = Aes256.decrypt(cipherText.getBytes(StandardCharsets.UTF_8));
 
 		// then
-		assertEquals(aes256DecryptedText, originText);
+		assertArrayEquals(originText.getBytes(StandardCharsets.UTF_8), aes256DecryptedText);
 	}
+
 }

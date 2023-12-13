@@ -2,6 +2,7 @@ package com.ourhours.server.global.config.security;
 
 import static java.util.Objects.*;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.SerializationUtils;
 
 import com.ourhours.server.global.util.cipher.Aes256;
-import com.ourhours.server.global.util.cookie.CookieUtil;
+import com.ourhours.server.global.util.jpa.cookie.CookieUtil;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,7 +47,7 @@ public class HttpCookieOAuth2AuthorizedClientRepository
 	public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request,
 		HttpServletResponse response) {
 		OAuth2AuthorizationRequest oAuth2AuthorizationRequest = getCookie(request);
-		CookieUtil.deleteCookie(request, response, OAUTH2_COOKIE_NAME);
+		CookieUtil.removeCookie(request, response, OAUTH2_COOKIE_NAME);
 		return oAuth2AuthorizationRequest;
 	}
 
@@ -60,7 +61,7 @@ public class HttpCookieOAuth2AuthorizedClientRepository
 	}
 
 	private OAuth2AuthorizationRequest decrypt(Cookie cookie) {
-		byte[] bytes = Aes256.decrypt(cookie.getValue().getBytes());
+		byte[] bytes = Aes256.decrypt(cookie.getValue().getBytes(StandardCharsets.UTF_8));
 		return (OAuth2AuthorizationRequest)SerializationUtils.deserialize(
 			bytes);
 	}

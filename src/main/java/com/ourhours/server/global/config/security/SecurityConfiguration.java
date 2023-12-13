@@ -13,13 +13,11 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import com.ourhours.server.global.config.security.filter.JwtAuthenticationFilter;
 import com.ourhours.server.global.config.security.filter.JwtExceptionHandlerFilter;
-import com.ourhours.server.global.util.oauth.CustomOAuth2UserService;
-import com.ourhours.server.global.util.oauth.OauthAuthenticationSuccessHandler;
 
 import lombok.RequiredArgsConstructor;
 
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
@@ -29,7 +27,6 @@ public class SecurityConfiguration {
 		"/api/token",
 		"/sample/**",
 		"/oauth2/**",
-		"/login"
 	};
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 	private final JwtExceptionHandlerFilter jwtExceptionHandlerFilter;
@@ -40,7 +37,7 @@ public class SecurityConfiguration {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity
+		return httpSecurity
 			.httpBasic(HttpBasicConfigurer::disable)
 			.formLogin(FormLoginConfigurer::disable)
 			.csrf(csrfConfigurer -> csrfConfigurer.csrfTokenRepository(new CookieCsrfTokenRepository()))
@@ -59,8 +56,7 @@ public class SecurityConfiguration {
 				.successHandler(oAuth2LoginSuccessHandler)
 				.userInfoEndpoint(userInfo -> userInfo
 					.userService(customOAuth2UserService)
-				));
-
-		return httpSecurity.build();
+				))
+			.build();
 	}
 }
