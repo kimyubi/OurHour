@@ -1,5 +1,6 @@
 package com.ourhours.server.global.config.security;
 
+import static com.ourhours.server.global.config.security.CustomOAuth2UserService.*;
 import static com.ourhours.server.global.util.jwt.JwtConstant.*;
 
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class OauthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
 		Authentication authentication) throws IOException {
 		OAuth2User oAuth2User = (OAuth2User)authentication.getPrincipal();
 
-		Long memberId = oAuth2User.getAttribute("memberId");
+		Long memberId = oAuth2User.getAttribute(ATTRIBUTE_KEY);
 		generateToken(response, memberId);
 
 		getRedirectStrategy().sendRedirect(request, response, "/");

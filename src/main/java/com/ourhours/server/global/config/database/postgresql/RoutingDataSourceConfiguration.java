@@ -1,35 +1,33 @@
 package com.ourhours.server.global.config.database.postgresql;
 
 import static com.ourhours.server.global.config.database.postgresql.DataSourceConfiguration.*;
-import static org.springframework.orm.jpa.vendor.Database.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
+import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import lombok.RequiredArgsConstructor;
+
 @Configuration
-@EnableJpaRepositories(basePackages = "com.ourhours.server.domain.*.repository")
+@RequiredArgsConstructor
 public class RoutingDataSourceConfiguration {
 
 	private static final String ROUTING_DATA_SOURCE = "routingDataSource";
 	private static final String DATA_SOURCE = "dataSource";
 
-	@Value("${spring.jpa.hibernate.ddl-auto}")
-	private String ddlPolicy;
+	private final JpaProperties jpaProperties;
 
 	@Bean(ROUTING_DATA_SOURCE)
 	public DataSource routingDataSource(@Qualifier(MAIN_DATA_SOURCE) final DataSource mainDataSource,
@@ -54,23 +52,16 @@ public class RoutingDataSourceConfiguration {
 
 	@Bean("entityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(@Qualifier(DATA_SOURCE) DataSource dataSource) {
-		LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
-		entityManagerFactory.setDataSource(dataSource);
+		EntityManagerFactoryBuilder entityManagerFactoryBuilder = generateEntityManagerFactoryBuilder(jpaProperties);
 
-		entityManagerFactory.setPackagesToScan("com.ourhours.server.domain.*.domain.entity");
-
-		entityManagerFactory.setJpaVendorAdapter(this.jpaVendorAdapter());
-		entityManagerFactory.setPersistenceUnitName("entityManager");
-		entityManagerFactory.setJpaProperties(addJpaProperties());
-		return entityManagerFactory;
+		return entityManagerFactoryBuilder
+			.dataSource(dataSource)
+			.packages("com.ourhours.server.domain.*.domain.entity")
+			.build();
 	}
 
-	private JpaVendorAdapter jpaVendorAdapter() {
-		HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
-		hibernateJpaVendorAdapter.setShowSql(true);
-		hibernateJpaVendorAdapter.setGenerateDdl(true);
-		hibernateJpaVendorAdapter.setDatabase(POSTGRESQL);
-		return hibernateJpaVendorAdapter;
+	private EntityManagerFactoryBuilder generateEntityManagerFactoryBuilder(JpaProperties jpaProperties) {
+		return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(), jpaProperties.getProperties(), null);
 	}
 
 	@Bean("transactionManager")
@@ -79,14 +70,6 @@ public class RoutingDataSourceConfiguration {
 		JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
 		jpaTransactionManager.setEntityManagerFactory(entityManagerFactory.getObject());
 		return jpaTransactionManager;
-	}
-
-	private Properties addJpaProperties() {
-		Properties properties = new Properties();
-		properties.setProperty("spring.jpa.hibernate.ddl-auto", ddlPolicy);
-		properties.setProperty("spring.jpa.properties.hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-		properties.setProperty("spring.jpa.properties.hibernate.format_sql", "true");
-		return properties;
 	}
 
 }

@@ -33,8 +33,12 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
   jpa:
-    hibernate:
-      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        hbm2ddl:
+          auto: create-drop
 
 jwt:
   secret: ${JWT_SECRET}

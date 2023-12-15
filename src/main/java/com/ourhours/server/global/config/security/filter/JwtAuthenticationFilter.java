@@ -5,7 +5,6 @@ import static com.ourhours.server.global.util.jwt.JwtConstant.*;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Optional;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +17,7 @@ import com.ourhours.server.global.model.jwt.dto.request.JwtAuthenticationRequest
 import com.ourhours.server.global.model.security.AnonymousAuthentication;
 import com.ourhours.server.global.model.security.JwtAuthentication;
 import com.ourhours.server.global.util.cipher.Aes256;
+import com.ourhours.server.global.util.jpa.cookie.CookieUtil;
 import com.ourhours.server.global.util.jwt.JwtProvider;
 
 import jakarta.servlet.FilterChain;
@@ -36,40 +36,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 		FilterChain filterChain) throws ServletException, IOException, JwtException, InvalidUUIDException {
-		Optional<Cookie[]> optionalCookies = Optional.ofNullable(request.getCookies());
+		Optional<Cookie> optionalJwtCookie = CookieUtil.getCookie(request, JWT_COOKIE_NAME.getValue());
 
-		if (optionalCookies.isEmpty() || isJwtCookieMissing(optionalCookies.get())) {
+		if (optionalJwtCookie.isEmpty()) {
 			setAnonymousAuthentication();
 			filterChain.doFilter(request, response);
 			return;
 		}
 
-		Cookie[] cookies = optionalCookies.get();
-		String token = getToken(cookies);
-		String uuid = getUuid(cookies);
+		String token = optionalJwtCookie.get().getValue();
+		String uuid = getUuidFromCookie(request);
 
-		Long userId = jwtProvider.getMemberId(token, Aes256.encrypt(uuid.getBytes(StandardCharsets.UTF_8)));
-		setJwtAuthentication(new JwtAuthenticationRequestDto(token, userId));
+		Long memberId = jwtProvider.getMemberId(token, Aes256.encrypt(uuid.getBytes(StandardCharsets.UTF_8)));
+		setJwtAuthentication(new JwtAuthenticationRequestDto(token, memberId));
 		filterChain.doFilter(request, response);
 	}
 
-	private boolean isJwtCookieMissing(Cookie[] cookies) {
-		return Arrays.stream(cookies)
-			.noneMatch(cookie -> cookie.getName().equals(JWT_COOKIE_NAME.getValue()));
-	}
-
-	private String getToken(Cookie[] cookies) {
-		return Arrays.stream(cookies)
-			.filter(cookie -> cookie.getName().equals(JWT_COOKIE_NAME.getValue()))
-			.findFirst()
-			.map(Cookie::getValue)
-			.orElseThrow(() -> new JwtException(FAILED_TO_GET_TOKEN));
-	}
-
-	private String getUuid(Cookie[] cookies) {
-		return Arrays.stream(cookies)
-			.filter(cookie -> cookie.getName().equals(UUID_COOKIE_NAME.getValue()))
-			.findFirst()
+	private String getUuidFromCookie(HttpServletRequest request) {
+		return CookieUtil.getCookie(request, UUID_COOKIE_NAME.getValue())
 			.map(Cookie::getValue)
 			.orElseThrow(() -> new InvalidUUIDException(INVALID_UUID));
 	}

@@ -10,22 +10,26 @@ import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequ
 import org.springframework.stereotype.Component;
 import org.springframework.util.SerializationUtils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ourhours.server.global.util.cipher.Aes256;
 import com.ourhours.server.global.util.jpa.cookie.CookieUtil;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-// TODO : deserialize deprecate (역직렬화 리팩토링)
+@RequiredArgsConstructor
 public class HttpCookieOAuth2AuthorizedClientRepository
 	implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
 
 	public static final String OAUTH2_COOKIE_NAME = "OAUTH2_AUTHORIZATION_REQUEST";
 	public static final Duration OAUTH_COOKIE_EXPIRY = Duration.ofMinutes(5);
+
+	private final ObjectMapper objectMapper;
 
 	@Override
 	public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
@@ -62,8 +66,7 @@ public class HttpCookieOAuth2AuthorizedClientRepository
 
 	private OAuth2AuthorizationRequest decrypt(Cookie cookie) {
 		byte[] bytes = Aes256.decrypt(cookie.getValue().getBytes(StandardCharsets.UTF_8));
-		return (OAuth2AuthorizationRequest)SerializationUtils.deserialize(
-			bytes);
+		return (OAuth2AuthorizationRequest)SerializationUtils.deserialize(bytes);
 	}
 
 }

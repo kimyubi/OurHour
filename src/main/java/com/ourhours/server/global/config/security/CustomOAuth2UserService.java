@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
 	private final MemberRepository memberRepository;
+	public static final String ATTRIBUTE_KEY = "memberId";
 
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -39,23 +40,27 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 		Long kakaoId = (Long)oAuth2User.getAttributes().get("id");
 
 		Map<String, Object> attributes = new HashMap<>();
-		Optional<Member> memberOptional = memberRepository.findByKakaoId(kakaoId);
-
-		if (memberOptional.isEmpty()) {
-			Member member = Member.builder()
-				.name(name)
-				.kakaoId(kakaoId)
-				.build();
-			Member savedMember = memberRepository.save(member);
-			attributes.put("memberId", savedMember.getId());
-		} else {
-			Member member = memberOptional.get();
-			attributes.put("memberId", member.getId());
-		}
+		attributes.put(ATTRIBUTE_KEY, getOrSaveMember(kakaoId, name).getId());
 
 		return new DefaultOAuth2User(
 			Collections.singleton(new SimpleGrantedAuthority(Role.USER.name())),
-			attributes, "memberId");
+			attributes, ATTRIBUTE_KEY);
+	}
+
+	private Member getOrSaveMember(Long kakaoId, String name) {
+		Optional<Member> optionalMember = memberRepository.findByKakaoId(kakaoId);
+		if (optionalMember.isEmpty())
+			return saveMember(kakaoId, name);
+
+		return optionalMember.get();
+	}
+
+	private Member saveMember(Long kakaoId, String name) {
+		Member member = Member.builder()
+			.name(name)
+			.kakaoId(kakaoId)
+			.build();
+		return memberRepository.save(member);
 	}
 }
 
