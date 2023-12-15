@@ -193,4 +193,6 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
+src/main/java/com/ourhours/server/global/util/cipher/CipherConstant.java
+src/test/resources/application-test.yml
 # End of https://www.toptal.com/developers/gitignore/api/gradle,windows,java,intellij

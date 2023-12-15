@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    main:
+      hikari:
+        driver-class-name: org.postgresql.Driver
+        jdbc-url: jdbc:postgresql://localhost:5432/ourhour
+        username: my_user
+        password: my_password
+    standby:
+      hikari:
+        driver-class-name: org.postgresql.Driver
+        jdbc-url: jdbc:postgresql://localhost:5433/ourhour
+        username: my_user
+        password: my_password
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        hbm2ddl:
+          auto: create-drop

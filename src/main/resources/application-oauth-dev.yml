@@ -1,19 +1,4 @@
 spring:
-  config:
-    activate:
-      on-profile: test
-
-  datasource:
-    main:
-      hikari:
-        driver-class-name: org.postgresql.Driver
-        username: test
-        password: test
-    standby:
-      hikari:
-        driver-class-name: org.postgresql.Driver
-        username: test
-        password: test
   security:
     oauth2:
       client:
@@ -32,16 +17,3 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
-  jpa:
-    properties:
-      hibernate:
-        format_sql: true
-        show_sql: true
-        hbm2ddl:
-          auto: create-drop
-
-jwt:
-  secret: ${JWT_SECRET}
-  token-validity-time: ${TOKEN_VALIDITY_TIME}
-
-

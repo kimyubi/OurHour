@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum ModuleInformation {
+public enum ModuleConstant {
 
 	POSTGRES_MAIN_SERVICE("test-main"),
 	POSTGRES_STANDBY_SERVICE("test-standby"),

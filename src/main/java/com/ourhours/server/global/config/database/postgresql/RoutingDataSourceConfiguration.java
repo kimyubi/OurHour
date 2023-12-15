@@ -8,23 +8,26 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
+import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
-@EnableJpaRepositories(basePackages = {
-	"com.ourhours.server.domain.sample.repository"})
+import lombok.RequiredArgsConstructor;
+
 @Configuration
+@RequiredArgsConstructor
 public class RoutingDataSourceConfiguration {
 
 	private static final String ROUTING_DATA_SOURCE = "routingDataSource";
 	private static final String DATA_SOURCE = "dataSource";
+
+	private final JpaProperties jpaProperties;
 
 	@Bean(ROUTING_DATA_SOURCE)
 	public DataSource routingDataSource(@Qualifier(MAIN_DATA_SOURCE) final DataSource mainDataSource,
@@ -49,20 +52,16 @@ public class RoutingDataSourceConfiguration {
 
 	@Bean("entityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(@Qualifier(DATA_SOURCE) DataSource dataSource) {
-		LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
-		entityManagerFactory.setDataSource(dataSource);
-		entityManagerFactory.setPackagesToScan("com.ourhours.server.domain.sample.domain.entity");
-		entityManagerFactory.setJpaVendorAdapter(this.jpaVendorAdapter());
-		entityManagerFactory.setPersistenceUnitName("entityManager");
-		return entityManagerFactory;
+		EntityManagerFactoryBuilder entityManagerFactoryBuilder = generateEntityManagerFactoryBuilder(jpaProperties);
+
+		return entityManagerFactoryBuilder
+			.dataSource(dataSource)
+			.packages("com.ourhours.server.domain.*.domain.entity")
+			.build();
 	}
 
-	private JpaVendorAdapter jpaVendorAdapter() {
-		HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
-		hibernateJpaVendorAdapter.setGenerateDdl(false);
-		hibernateJpaVendorAdapter.setShowSql(false);
-		hibernateJpaVendorAdapter.setDatabasePlatform("org.hibernate.dialect.PostgreSQLDialect");
-		return hibernateJpaVendorAdapter;
+	private EntityManagerFactoryBuilder generateEntityManagerFactoryBuilder(JpaProperties jpaProperties) {
+		return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(), jpaProperties.getProperties(), null);
 	}
 
 	@Bean("transactionManager")

@@ -1,17 +1,26 @@
 spring:
   profiles:
     default: ${SPRING_ACTIVE_PROFILE}
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: true
-    show-sql: true
-    database: postgresql
+    group:
+      dev:
+        - oauth-dev
+        - db-dev
 
 springdoc:
   swagger-ui:
     url: /docs/openapi3.yaml
     path: /swagger
+    csrf:
+      enabled: true
+
+jwt:
+  secret: ${SECRET}
+  token-validity-time: ${TOKEN_VALIDITY_TIME}
+
+server:
+  port: 8000
+
+
+
+
+
