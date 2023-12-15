@@ -37,4 +37,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GHP_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          KAKAO_CLIENT_ID: ${{secrets.KAKAO_CLIENT_ID}}
+          KAKAO_CLIENT_SECRET: ${{secrets.KAKAO_CLIENT_SECRET}}
+          KAKAO_REDIRECT_URI: ${{secrets.KAKAO_REDIRECT_URI}}
+          JWT_SECRET: ${{secrets.KAKAO_REDIRECT_URI}}
+          TOKEN_VALIDITY_TIME: ${{secrets.TOKEN_VALIDITY_TIME}}
         run: ./gradlew build sonar --info
