@@ -10,7 +10,6 @@ import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequ
 import org.springframework.stereotype.Component;
 import org.springframework.util.SerializationUtils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ourhours.server.global.util.cipher.Aes256;
 import com.ourhours.server.global.util.jpa.cookie.CookieUtil;
 
@@ -28,8 +27,6 @@ public class HttpCookieOAuth2AuthorizedClientRepository
 
 	public static final String OAUTH2_COOKIE_NAME = "OAUTH2_AUTHORIZATION_REQUEST";
 	public static final Duration OAUTH_COOKIE_EXPIRY = Duration.ofMinutes(5);
-
-	private final ObjectMapper objectMapper;
 
 	@Override
 	public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
