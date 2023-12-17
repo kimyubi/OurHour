@@ -37,7 +37,7 @@ public class OauthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
 		Long memberId = oAuth2User.getAttribute(ATTRIBUTE_KEY);
 		generateToken(response, memberId);
 
-		getRedirectStrategy().sendRedirect(request, response, "/");
+		getRedirectStrategy().sendRedirect(request, response, "https://localhost:3001/");
 	}
 
 	public JwtResponseDto generateToken(HttpServletResponse response, Long memberId) {
