@@ -19,7 +19,7 @@ public class JwtAuthentication implements Authentication {
 
 	public JwtAuthentication(JwtAuthenticationRequestDto dto) {
 		this.token = dto.token();
-		this.memberId = dto.userId();
+		this.memberId = dto.memberId();
 	}
 
 	@Override

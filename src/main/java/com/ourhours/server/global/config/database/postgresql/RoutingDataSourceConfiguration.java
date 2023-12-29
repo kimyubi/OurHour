@@ -56,7 +56,7 @@ public class RoutingDataSourceConfiguration {
 
 		return entityManagerFactoryBuilder
 			.dataSource(dataSource)
-			.packages("com.ourhours.server.domain.*.domain.entity")
+			.packages("com.ourhours.server.domain.*.entity")
 			.build();
 	}
 

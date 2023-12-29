@@ -14,7 +14,7 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import com.ourhours.server.domain.member.domain.entity.Member;
+import com.ourhours.server.domain.member.entity.Member;
 import com.ourhours.server.domain.member.repository.MemberRepository;
 import com.ourhours.server.global.model.security.Role;
 

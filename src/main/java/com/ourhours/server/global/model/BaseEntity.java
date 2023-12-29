@@ -8,7 +8,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.ourhours.server.domain.member.domain.entity.Member;
+import com.ourhours.server.domain.member.entity.Member;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.ManyToOne;
