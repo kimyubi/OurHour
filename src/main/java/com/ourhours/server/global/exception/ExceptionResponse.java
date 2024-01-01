@@ -1,4 +1,4 @@
-package com.ourhours.server.global.model.exception;
+package com.ourhours.server.global.exception;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ExceptionResponse {
 
-	private String code;
+	private int code;
 	private String message;
 
 	public ExceptionResponse(ExceptionConstant exceptionConstant) {

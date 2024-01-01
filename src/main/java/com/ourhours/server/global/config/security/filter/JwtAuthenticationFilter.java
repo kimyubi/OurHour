@@ -1,6 +1,6 @@
 package com.ourhours.server.global.config.security.filter;
 
-import static com.ourhours.server.global.model.exception.ExceptionConstant.*;
+import static com.ourhours.server.global.exception.ExceptionConstant.*;
 import static com.ourhours.server.global.util.jwt.JwtConstant.*;
 
 import java.io.IOException;
@@ -11,8 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.ourhours.server.global.model.exception.InvalidUUIDException;
-import com.ourhours.server.global.model.exception.JwtException;
+import com.ourhours.server.global.exception.InvalidUUIDException;
+import com.ourhours.server.global.exception.JwtException;
 import com.ourhours.server.global.model.jwt.dto.request.JwtAuthenticationRequestDto;
 import com.ourhours.server.global.model.security.AnonymousAuthentication;
 import com.ourhours.server.global.model.security.JwtAuthentication;

@@ -1,6 +1,6 @@
 package com.ourhours.server.global.util.jwt;
 
-import static com.ourhours.server.global.model.exception.ExceptionConstant.*;
+import static com.ourhours.server.global.exception.ExceptionConstant.*;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -11,8 +11,8 @@ import java.util.Map;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import com.ourhours.server.global.model.exception.InvalidUUIDException;
-import com.ourhours.server.global.model.exception.JwtException;
+import com.ourhours.server.global.exception.InvalidUUIDException;
+import com.ourhours.server.global.exception.JwtException;
 import com.ourhours.server.global.model.jwt.dto.response.JwtResponseDto;
 
 import io.jsonwebtoken.Claims;

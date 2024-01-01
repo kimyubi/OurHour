@@ -1,4 +1,4 @@
-package com.ourhours.server.global.model.exception;
+package com.ourhours.server.global.exception;
 
 import lombok.Getter;
 

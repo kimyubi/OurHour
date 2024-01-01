@@ -12,11 +12,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ourhours.server.global.model.exception.BaseException;
-import com.ourhours.server.global.model.exception.ExceptionConstant;
-import com.ourhours.server.global.model.exception.ExceptionResponse;
-import com.ourhours.server.global.model.exception.InvalidUUIDException;
-import com.ourhours.server.global.model.exception.JwtException;
+import com.ourhours.server.global.exception.BaseException;
+import com.ourhours.server.global.exception.ExceptionConstant;
+import com.ourhours.server.global.exception.ExceptionResponse;
+import com.ourhours.server.global.exception.InvalidUUIDException;
+import com.ourhours.server.global.exception.JwtException;
 import com.ourhours.server.global.util.jpa.cookie.CookieUtil;
 
 import jakarta.servlet.FilterChain;

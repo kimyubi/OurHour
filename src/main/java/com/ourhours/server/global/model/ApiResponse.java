@@ -2,6 +2,8 @@ package com.ourhours.server.global.model;
 
 import org.springframework.http.HttpStatus;
 
+import com.ourhours.server.global.exception.ExceptionConstant;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,6 +35,10 @@ public class ApiResponse<T> {
 
 	public static <T> ApiResponse<T> okWithData(T data) {
 		return of(HttpStatus.OK.value(), null, data);
+	}
+
+	public static <T> ApiResponse<T> withException(ExceptionConstant exceptionConstant, T data) {
+		return of(exceptionConstant.getCode(), exceptionConstant.getMessage(), data);
 	}
 
 }

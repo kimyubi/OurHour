@@ -1,6 +1,6 @@
 package com.ourhours.server.global.util.jwt;
 
-import static com.ourhours.server.global.model.exception.ExceptionConstant.*;
+import static com.ourhours.server.global.exception.ExceptionConstant.*;
 import static org.junit.Assert.*;
 
 import java.nio.charset.StandardCharsets;
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.ourhours.server.IntegrationTestSupporter;
-import com.ourhours.server.global.model.exception.InvalidUUIDException;
+import com.ourhours.server.global.exception.InvalidUUIDException;
 import com.ourhours.server.global.model.jwt.dto.response.JwtResponseDto;
 import com.ourhours.server.global.util.cipher.Aes256;
 
