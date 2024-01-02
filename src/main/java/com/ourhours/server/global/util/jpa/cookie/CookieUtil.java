@@ -1,6 +1,5 @@
 package com.ourhours.server.global.util.jpa.cookie;
 
-import static org.apache.commons.lang3.StringUtils.*;
 import static org.hibernate.type.descriptor.java.IntegerJavaType.*;
 
 import java.time.Duration;
@@ -39,7 +38,7 @@ public final class CookieUtil {
 				Arrays.stream(cookies)
 					.filter(cookie -> cookie.getName().equals(cookieName))
 					.forEach(cookie -> {
-						cookie.setValue(EMPTY);
+						cookie.setValue("");
 						cookie.setPath("/");
 						cookie.setMaxAge(ZERO);
 						response.addCookie(cookie);

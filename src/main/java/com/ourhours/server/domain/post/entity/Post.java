@@ -1,4 +1,6 @@
-package com.ourhours.server.domain.member.entity;
+package com.ourhours.server.domain.post.entity;
+
+import com.ourhours.server.global.model.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,23 +15,20 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Post extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false)
-	private Long kakaoId;
+	@Column(columnDefinition = "text")
+	private String content;
 
-	@Column(nullable = false)
-	private String name;
-
-	// TODO
+	private Long memberId;
 
 	@Builder
-	public Member(String name, Long kakaoId) {
-		this.name = name;
-		this.kakaoId = kakaoId;
+	public Post(String content, Long memberId) {
+		this.content = content;
+		this.memberId = memberId;
 	}
 }

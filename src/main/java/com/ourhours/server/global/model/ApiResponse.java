@@ -41,4 +41,8 @@ public class ApiResponse<T> {
 		return of(exceptionConstant.getCode(), exceptionConstant.getMessage(), data);
 	}
 
+	public static <T> ApiResponse<T> withException(ExceptionConstant exceptionConstant) {
+		return of(exceptionConstant.getCode(), exceptionConstant.getMessage(), null);
+	}
+
 }

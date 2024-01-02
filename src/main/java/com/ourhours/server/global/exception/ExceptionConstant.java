@@ -16,7 +16,8 @@ public enum ExceptionConstant {
 	FAILED_TO_GET_TOKEN(1006, "쿠키로부터 토큰을 받아오는데 실패하였습니다."),
 
 	// common
-	INVALID_ARGUMENT(2001, "요청과 함께 전달된 값이 유효하지 않습니다.");
+	INVALID_ARGUMENT(2001, "요청과 함께 전달된 값이 유효하지 않습니다."),
+	INVALID_ACCESS(2002, "잘못된 접근입니다.");
 
 	private final int code;
 	private final String message;

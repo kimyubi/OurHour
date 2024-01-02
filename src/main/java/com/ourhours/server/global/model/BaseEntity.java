@@ -21,7 +21,7 @@ import lombok.Getter;
 public abstract class BaseEntity {
 
 	@CreatedDate
-	private LocalDateTime createAt;
+	private LocalDateTime createdAt;
 
 	@CreatedBy
 	@ManyToOne

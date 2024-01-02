@@ -8,8 +8,6 @@ spring:
 
 springdoc:
   swagger-ui:
-    url: /docs/openapi3.yaml
-    path: /swagger
     csrf:
       enabled: true
 
