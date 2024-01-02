@@ -29,19 +29,19 @@ public class CreatePostApi {
 
 	@Operation(summary = "새 포스트 작성")
 	@PostMapping("/api/post")
-	public ApiResponse createPost(@RequestBody CreatePostRequest request) {
-		if (!isLoggedIn()) {
+	public ApiResponse<Object> createPost(@RequestBody CreatePostRequest request) {
+		if (Boolean.FALSE.equals(isLoggedIn())) {
 			return ApiResponse.withException(ExceptionConstant.INVALID_ACCESS);
 		}
 		return createPostService.createPost(request.toServiceRequest(), getMemberId());
 	}
 
-	private Boolean isLoggedIn() {
+	public Boolean isLoggedIn() {
 		Optional<Member> optionalMember = memberRepository.findById(getMemberId());
 		return optionalMember.isPresent();
 	}
 
-	private Long getMemberId() {
+	public Long getMemberId() {
 		JwtAuthentication jwtAuthentication = (JwtAuthentication)SecurityContextHolder.getContext().getAuthentication();
 		return jwtAuthentication.getMemberId();
 	}

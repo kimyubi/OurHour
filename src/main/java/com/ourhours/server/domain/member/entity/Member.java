@@ -5,14 +5,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Member {
 
 	@Id
@@ -31,5 +30,9 @@ public class Member {
 	public Member(String name, Long kakaoId) {
 		this.name = name;
 		this.kakaoId = kakaoId;
+	}
+
+	public void setIdForMockTest(long id) {
+		this.id = id;
 	}
 }
