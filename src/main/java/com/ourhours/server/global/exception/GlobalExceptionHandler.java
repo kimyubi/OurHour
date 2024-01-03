@@ -33,4 +33,9 @@ public class GlobalExceptionHandler {
 			builder.toString());
 	}
 
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(InvalidPostIdException.class)
+	public ApiResponse<String> handleInvalidPostIdException() {
+		return ApiResponse.withException(ExceptionConstant.INVALID_POST_ID);
+	}
 }

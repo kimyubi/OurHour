@@ -1,5 +1,7 @@
 package com.ourhours.server.domain.member.entity;
 
+import com.ourhours.server.global.model.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Member {
+public class Member extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +26,7 @@ public class Member {
 	@Column(nullable = false)
 	private String name;
 
-	// TODO
+	// TODO 프로필 이미지
 
 	@Builder
 	public Member(String name, Long kakaoId) {

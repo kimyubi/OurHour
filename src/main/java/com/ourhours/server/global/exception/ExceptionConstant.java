@@ -17,7 +17,10 @@ public enum ExceptionConstant {
 
 	// common
 	INVALID_ARGUMENT(2001, "요청과 함께 전달된 값이 유효하지 않습니다."),
-	INVALID_ACCESS(2002, "잘못된 접근입니다.");
+	INVALID_ACCESS(2002, "잘못된 접근입니다."),
+
+	// post
+	INVALID_POST_ID(3001, "유효하지 않은 Post 식별자입니다.");
 
 	private final int code;
 	private final String message;
